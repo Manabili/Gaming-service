@@ -88,11 +88,11 @@ public class GameDao {
 
     public void registerGameScore(GameDTO gameDTO) throws SQLException {
 
-        String query = "INSERT INTO GAME_SCORES(userId, game_score) values(?, ?) ";
+        String query = "UPDATE GAME_SCORES SET game_score = ? where userId = ? ";
         // Create a prepared statement for the query
         PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
-        preparedStatement.setInt(1, gameDTO.getUserId());
-        preparedStatement.setInt(2, gameDTO.getGameScore());
+        preparedStatement.setInt(1, gameDTO.getGameScore());
+        preparedStatement.setInt(2, gameDTO.getUserId());
 
         int rowsAffected = preparedStatement.executeUpdate();
         if(rowsAffected > 0) {
