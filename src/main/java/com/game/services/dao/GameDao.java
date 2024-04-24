@@ -5,13 +5,13 @@ import com.game.services.config.DatabaseClient;
 import com.game.services.models.GameDTO;
 import com.game.services.models.ResponseDTO;
 import com.game.services.models.User;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import javax.inject.Inject;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

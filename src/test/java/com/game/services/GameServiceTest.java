@@ -1,58 +1,87 @@
 package com.game.services;
 
-import com.game.services.dao.GameDao;
+import com.game.services.config.Constants;
+import com.game.services.config.DatabaseClient;
 import com.game.services.models.GameDTO;
-import com.game.services.models.ResponseDTO;
 import com.game.services.models.User;
 import com.game.services.services.GameService;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GameServiceTest {
 
-    public static final Logger log = LoggerFactory.getLogger(GameServiceTest.class);
-    @InjectMocks
+    public static final Logger log = LoggerFactory.getLogger(GameDaoTest.class);
+    @Inject
     GameService gameService;
+    @Before
+    public void setUp() throws Exception {
+        DatabaseClient databaseClient = DatabaseClient.getInstance();
+        Connection connection = databaseClient.getConnection(Constants.GAMES_DB);
+        String deleteUser = "DELETE from USERS where userEmail = 'herny@gmail.com'";
+        String deleteGameScore = "DELETE from GAME_SCORES where userId = 1";
 
-    @Mock
-    GameDao gameDao;
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(deleteUser);
+        statement.executeUpdate(deleteGameScore);
+    }
 
     @Test
     public void testUserLogin() {
         User user = new User();
+        user.setUserName("Herny");
+        user.setUserEmail("herny@gmail.com");
+        user.setPassword("aZxdsfsfklf");
+
         try {
-            Mockito.when(gameDao.registerUser(user)).thenReturn(3);
-            assertEquals(gameDao.registerUser(user), 3);
+            assertEquals(gameService.userLogin(user).getStatusCode(), 3);
         } catch (Exception e) {
             log.error("Error in registering test User !");
         }
+
+        try {
+            assertEquals(gameService.userLogin(user).getStatusCode(), 1);
+        } catch (Exception e) {
+            log.error("Error logging in test User !");
+        }
+
     }
 
     @Test
     public void testStoreGameScore() {
         GameDTO gameDTO = new GameDTO();
+        gameDTO.setUserId(1);
+        gameDTO.setGameScore(4543);
         try {
-            Mockito.when(gameDao.registerGameScore(gameDTO)).thenReturn(1);
-            assertEquals(gameDao.registerGameScore(gameDTO), 1);
+            assertEquals(gameService.storeGameScores(gameDTO).getStatusCode(), 1);
+        } catch (Exception e) {
+            log.error("Error in storing game scores !");
+        }
+
+        gameDTO.setGameScore(454);
+        try {
+            assertEquals(gameService.storeGameScores(gameDTO).getStatusCode(), 2);
+        } catch (Exception e) {
+            log.error("Error in storing game scores !");
+        }
+
+        gameDTO.setUserId(0);
+        gameDTO.setGameScore(454);
+        try {
+            assertEquals(gameService.storeGameScores(gameDTO).getStatusCode(), 2);
         } catch (Exception e) {
             log.error("Error in storing game scores !");
         }
@@ -60,17 +89,8 @@ public class GameServiceTest {
 
     @Test
     public void testTopUser() {
-        GameDTO gameDTO = new GameDTO();
-        List<ResponseDTO> topUsers = new ArrayList<>();
-        ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setGameScore(600);
-        responseDTO.setUserName("Harry");
-        responseDTO.setUserEmail("Harry@gmail.com");
-        topUsers.add(responseDTO);
-
         try {
-            Mockito.when(gameDao.getTopUsers()).thenReturn(topUsers);
-            assertNotNull(gameDao.getTopUsers());
+            assertNotNull(gameService.retrieveTopUsers().getResponseDTO());
         } catch (Exception e) {
             log.error("Error in getting Top Users !");
         }
