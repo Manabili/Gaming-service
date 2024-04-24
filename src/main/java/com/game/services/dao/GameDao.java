@@ -32,7 +32,7 @@ public class GameDao {
     }
 
     public int registerUser(User user) throws SQLException {
-        if(isUserExists(user)) {
+        if(isUserExists(user) > 0) {
             if (checkUserCredentials(user)) {
                 log.info("User has been successfully logged in");
                 return 1;
@@ -91,8 +91,19 @@ public class GameDao {
         return buildResponse(resultSet);
     }
 
-    private boolean isUserExists(User user) throws SQLException {
-        String query = "SELECT count(1) from USERS where userEmail = ?";
+    public List<ResponseDTO> fetchUserScore(int userId) throws Exception {
+        String query = "SELECT u.userId, u.userName, u.userEmail, g.game_score, g.game_timestamp FROM users u " +
+                "JOIN game_scores g ON u.userId = g.userId where g.userId = ?;";
+
+        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
+        preparedStatement.setInt(1, userId);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return buildResponse(resultSet);
+    }
+
+    public int isUserExists(User user) throws SQLException {
+        String query = "SELECT userId from USERS where userEmail = ?";
         PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
         preparedStatement.setString(1, user.getUserEmail());
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -100,7 +111,7 @@ public class GameDao {
         if (resultSet.next()) {
             userCount = resultSet.getInt(1);
         }
-        return userCount > 0;
+        return userCount;
     }
 
     private boolean checkUserCredentials(User user) throws SQLException {

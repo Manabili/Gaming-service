@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -45,6 +46,24 @@ public class GameController {
         }
     }
 
+
+    @PostMapping("/fetch/user")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ResponseEntity<String> findUser(@RequestBody(required = true) User user) {
+        try {
+            log.info("User Details : {}", objectMapper.writeValueAsString(user));
+            int userId = gameService.getUserId(user);
+            if(userId > 0) {
+                return ResponseEntity.status(HttpStatus.OK).body(Integer.toString(userId));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found !");
+        } catch (Exception e) {
+            log.error("Error in fetching user : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in user login !");
+        }
+    }
+
     @PostMapping("/register/game-score")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -63,7 +82,6 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in storing Game Scores !");
         }
     }
-
     @GetMapping("/getTopUsers")
     @Produces(MediaType.APPLICATION_JSON)
     public ResponseEntity<CustomResponseDTO> fetchTopUsers() {
@@ -75,6 +93,22 @@ public class GameController {
         } catch (Exception e) {
             log.error("Error in fetching Top Users !");
             customResponseDTO.setErrorMessage("Error in fetching Top Users !");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(customResponseDTO);
+        }
+    }
+
+    @GetMapping("/user/score")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResponseEntity<CustomResponseDTO> fetchUserScore(@RequestParam(required = true) int userId) {
+        log.info("Request received for fetching Top Users !");
+        CustomResponseDTO customResponseDTO = new CustomResponseDTO();
+        try {
+            customResponseDTO = gameService.fetchUserHighestScore(userId);
+            return ResponseEntity.ok(customResponseDTO);
+        } catch (Exception e) {
+            log.error("Error in fetching User's Game Details !");
+            customResponseDTO.setErrorMessage("Error in fetching User's Game Details !");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(customResponseDTO);
         }

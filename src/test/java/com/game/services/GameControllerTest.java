@@ -65,6 +65,23 @@ public class GameControllerTest {
     }
 
     @Test
+    public void fetchUserTest() {
+        User user = new User();
+        user.setUserEmail("mark@gmail.com");
+
+        String url = "/fetch/user";
+        HttpEntity<User> requestEntity = new HttpEntity<>(user, headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
+        assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCode().value());
+
+        user.setUserEmail("abc@gmail.com");
+        requestEntity = new HttpEntity<>(user, headers);
+        responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
+        assertEquals(HttpStatus.NOT_FOUND.value(), responseEntity.getStatusCode().value());
+
+    }
+
+    @Test
     public void registerGameScoreTest() {
         String url = "/register/game-score";
         GameDTO gameDTO = new GameDTO();
@@ -84,6 +101,13 @@ public class GameControllerTest {
     @Test
     public void fetchTopUsersTest() {
         String url = "/getTopUsers";
+        ResponseEntity<CustomResponseDTO> responseEntity = restTemplate.getForEntity(url, CustomResponseDTO.class);
+        assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCode().value());
+    }
+
+    @Test
+    public void fetchUserScoreTest() {
+        String url = "/user/score?userId=2";
         ResponseEntity<CustomResponseDTO> responseEntity = restTemplate.getForEntity(url, CustomResponseDTO.class);
         assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCode().value());
     }

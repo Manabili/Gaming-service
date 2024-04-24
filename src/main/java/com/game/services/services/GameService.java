@@ -35,6 +35,10 @@ public class GameService {
         return new StatusDTO(userStatus, "User is not logged in, Please try again !");
     }
 
+    public int getUserId(User user) throws SQLException {
+        int userId = gameDao.isUserExists(user);
+        return userId;
+    }
     public StatusDTO storeGameScores(GameDTO gameDTO) throws SQLException {
 
         int rowsAffected = gameDao.registerGameScore(gameDTO);
@@ -56,7 +60,13 @@ public class GameService {
         log.info("Top Users : {}", new ObjectMapper().writeValueAsString(topUsers));
         return topUsers;
     }
-
+    public CustomResponseDTO fetchUserHighestScore(int userId) throws Exception {
+        CustomResponseDTO topUsers = new CustomResponseDTO();
+        List<ResponseDTO> responseDTOS = gameDao.fetchUserScore(userId);
+        topUsers.setResponseDTO(responseDTOS);
+        log.info("User Game Details : {}", new ObjectMapper().writeValueAsString(topUsers));
+        return topUsers;
+    }
     private boolean isValidUser(User user) {
         return !StringUtils.isBlank(user.getUserName()) && !StringUtils.isBlank(user.getUserEmail()) && !StringUtils.isBlank(user.getPassword());
     }

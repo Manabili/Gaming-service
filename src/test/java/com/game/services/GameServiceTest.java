@@ -17,8 +17,7 @@ import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -58,6 +57,31 @@ public class GameServiceTest {
             log.error("Error logging in test User !");
         }
 
+        try {
+            assertEquals(gameService.userLogin(user).getStatusCode(), 1);
+        } catch (Exception e) {
+            log.error("Error logging in test User !");
+        }
+    }
+
+    @Test
+    public void testFetchUser() {
+        User user = new User();
+        user.setUserEmail("mark@gmail.com");
+
+        try {
+            assertNotEquals(gameService.getUserId(user), 0);
+        } catch (Exception e) {
+            log.error("Error in registering test User !");
+        }
+
+        user.setUserEmail("abcxyz636");
+        try {
+            assertEquals(gameService.getUserId(user), 0);
+        } catch (Exception e) {
+            log.error("Error logging in test User !");
+        }
+
     }
 
     @Test
@@ -93,6 +117,15 @@ public class GameServiceTest {
             assertNotNull(gameService.retrieveTopUsers().getResponseDTO());
         } catch (Exception e) {
             log.error("Error in getting Top Users !");
+        }
+    }
+
+    @Test
+    public void testUserScore() {
+        try {
+            assertNotNull(gameService.fetchUserHighestScore(2).getResponseDTO());
+        } catch (Exception e) {
+            log.error("Error in getting User Score !");
         }
     }
 }

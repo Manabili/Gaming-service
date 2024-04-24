@@ -42,6 +42,18 @@ public class GameDaoTest {
     }
 
     @Test
+    public void testFetchUser() {
+        User user = new User();
+        user.setUserEmail("mark@gmail.com");
+
+        try {
+            Mockito.when(gameDao.isUserExists(user)).thenReturn(2);
+            assertEquals(gameDao.isUserExists(user), 2);
+        } catch (Exception e) {
+            log.error("Error in fetching test User !");
+        }
+    }
+    @Test
     public void testStoreGameScore() {
         GameDTO gameDTO = new GameDTO();
         try {
@@ -67,6 +79,23 @@ public class GameDaoTest {
             assertNotNull(gameDao.getTopUsers());
         } catch (Exception e) {
             log.error("Error in getting Top Users !");
+        }
+    }
+
+    @Test
+    public void testUserScore() {
+        List<ResponseDTO> userScore = new ArrayList<>();
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setGameScore(600);
+        responseDTO.setUserName("Harry");
+        responseDTO.setUserEmail("Harry@gmail.com");
+        userScore.add(responseDTO);
+
+        try {
+            Mockito.when(gameDao.fetchUserScore(2)).thenReturn(userScore);
+            assertNotNull(gameDao.fetchUserScore(2));
+        } catch (Exception e) {
+            log.error("Error in getting User Scores !");
         }
     }
 }
