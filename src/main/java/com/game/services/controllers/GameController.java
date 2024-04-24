@@ -1,5 +1,6 @@
 package com.game.services.controllers;
 
+import com.game.services.models.CustomResponseDTO;
 import com.game.services.models.GameDTO;
 import com.game.services.models.ResponseDTO;
 import com.game.services.services.GameService;
@@ -18,6 +19,9 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -31,14 +35,11 @@ public class GameController {
     @Consumes(MediaType.APPLICATION_JSON)
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {
-            if(!isValidUser(user)) {
-                return ResponseEntity.ok("Please enter valid Details. Fields can't be blank.");
-            }
-            gameService.userLogin(user);
-            return ResponseEntity.status(HttpStatus.OK).body("User has been logged in successfully !");
+            String status = gameService.userLogin(user);
+            return ResponseEntity.status(HttpStatus.OK).body(status);
         } catch (Exception e) {
             log.error("Error in user login : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in user login : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in user login !");
         }
     }
 
@@ -47,27 +48,27 @@ public class GameController {
     @Consumes(MediaType.APPLICATION_JSON)
     public ResponseEntity<String> registerGameScore(@RequestBody GameDTO gameDTO) {
         try {
-            gameService.storeGameScores(gameDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("User's score has been stored successfully !");
+            String status = gameService.storeGameScores(gameDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(status);
         } catch (Exception e) {
-            log.error("Error in storing scores!");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in storing users score : " + e.getMessage());
+            log.error("Error in storing Game Scores : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in storing Game Scores !");
         }
     }
 
     @GetMapping("/getTopUsers")
     @Produces(MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<ResponseDTO>> fetchTopUsers() {
-        List<ResponseDTO> topUsers = null;
+    public ResponseEntity<CustomResponseDTO> fetchTopUsers() {
+        CustomResponseDTO customResponseDTO = new CustomResponseDTO();
         try {
-            topUsers = gameService.retrieveTopUsers();
+            List<ResponseDTO> topUsers = gameService.retrieveTopUsers();
+            customResponseDTO.setResponseDTO(topUsers);
+            return ResponseEntity.ok(customResponseDTO);
         } catch (Exception e) {
-            log.error("Error in user login!");
+            log.error("Error in fetching Top Users !");
+            customResponseDTO.setErrorMessage("Error in fetching Top Users !");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(customResponseDTO);
         }
-        return ResponseEntity.ok(topUsers);
-    }
-
-    private boolean isValidUser(User user) {
-        return !StringUtils.isBlank(user.getUserName()) && !StringUtils.isBlank(user.getUserEmail()) && !StringUtils.isBlank(user.getPassword());
     }
 }

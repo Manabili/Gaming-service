@@ -31,18 +31,18 @@ public class GameDao {
         }
     }
 
-    public void registerUser(User user) throws SQLException {
+    public int registerUser(User user) throws SQLException {
         if(isUserExists(user)) {
             if (checkUserCredentials(user)) {
                 log.info("User has been successfully logged in");
+                return 1;
             } else {
                 log.error("Please enter valid credentials !");
+                return 2;
             }
         }
         else {
-
             String query = "INSERT INTO USERS(userName, userEmail, password) values(?, ?, ?)";
-
             // Create a prepared statement for the query
             PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
             preparedStatement.setString(1, user.getUserName());
@@ -50,55 +50,37 @@ public class GameDao {
             preparedStatement.setString(3, user.getPassword());
 
             int rowsAffected = preparedStatement.executeUpdate();
-            log.info("New user has been successfully registered");
+            if(rowsAffected > 0) {
+                log.info("New user has been successfully registered .");
+                return 3;
+            }
+        }
+        return 0;
+    }
+
+    public int registerGameScore(GameDTO gameDTO) throws SQLException {
+        int game_score = getPreviousScore(gameDTO.getUserId());
+        if(gameDTO.getGameScore() > game_score) {
+            String query = "REPLACE INTO GAME_SCORES(userId, game_score) VALUES(?, ?) ";
+            // Create a prepared statement for the query
+            PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
+            preparedStatement.setInt(1, gameDTO.getUserId());
+            preparedStatement.setInt(2, gameDTO.getGameScore());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if(rowsAffected > 0) {
+                log.info("Game Score has been successfully added.");
+                return rowsAffected;
+            }
+            log.error("Game Score is not updated.");
+            return -1;
+        }
+        else {
+            log.info("Higher previous game score than the current one !");
+            return 0;
         }
     }
 
-    public boolean isUserExists(User user) throws SQLException {
-
-        String query = "SELECT count(1) from USERS where userEmail = ?";
-
-        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
-        preparedStatement.setString(1, user.getUserEmail());
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-        int userCount = 0;
-        if (resultSet.next()) {
-            userCount = resultSet.getInt(1);
-        }
-        return userCount > 0;
-    }
-
-    public boolean checkUserCredentials(User user) throws SQLException {
-
-        String query = "SELECT count(1) from USERS where userEmail = ? and password = ?";
-
-        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
-        preparedStatement.setString(1, user.getUserEmail());
-        preparedStatement.setString(2, user.getPassword());
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        int userCount = 0;
-        if (resultSet.next()) {
-            userCount = resultSet.getInt(1);
-        }
-        return userCount > 0;
-    }
-
-    public void registerGameScore(GameDTO gameDTO) throws SQLException {
-
-        String query = "UPDATE GAME_SCORES SET game_score = ? where userId = ? ";
-        // Create a prepared statement for the query
-        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
-        preparedStatement.setInt(1, gameDTO.getGameScore());
-        preparedStatement.setInt(2, gameDTO.getUserId());
-
-        int rowsAffected = preparedStatement.executeUpdate();
-        if(rowsAffected > 0) {
-            log.info("Game Score has been successfully added !");
-        }
-    }
     public List<ResponseDTO> getTopUsers() throws Exception {
         String query = "SELECT u.userId, u.userName, u.userEmail, g.game_score, g.game_timestamp FROM users u " +
                 "JOIN game_scores g ON u.userId = g.userId " +
@@ -109,7 +91,45 @@ public class GameDao {
         return buildResponse(resultSet);
     }
 
-    public List<ResponseDTO> buildResponse(ResultSet resultSet) throws Exception {
+    private boolean isUserExists(User user) throws SQLException {
+        String query = "SELECT count(1) from USERS where userEmail = ?";
+        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
+        preparedStatement.setString(1, user.getUserEmail());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int userCount = 0;
+        if (resultSet.next()) {
+            userCount = resultSet.getInt(1);
+        }
+        return userCount > 0;
+    }
+
+    private boolean checkUserCredentials(User user) throws SQLException {
+        String query = "SELECT count(1) from USERS where userEmail = ? and password = ?";
+        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
+        preparedStatement.setString(1, user.getUserEmail());
+        preparedStatement.setString(2, user.getPassword());
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int userCount = 0;
+        if (resultSet.next()) {
+            userCount = resultSet.getInt(1);
+        }
+        return userCount > 0;
+    }
+
+    private int getPreviousScore(int userId) throws SQLException {
+        String query = "SELECT game_score FROM game_scores WHERE userId = ? ";
+        PreparedStatement preparedStatement = gamesDb.prepareStatement(query);
+        preparedStatement.setInt(1, userId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt("game_score");
+        } else {
+            // If no previous score found, return a default value (e.g., 0)
+            return 0;
+        }
+    }
+    private List<ResponseDTO> buildResponse(ResultSet resultSet) throws Exception {
         List<ResponseDTO> topUsers = new ArrayList<>();
         while (resultSet.next()) {
             ResponseDTO responseDTO = new ResponseDTO();

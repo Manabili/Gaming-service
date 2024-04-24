@@ -40,31 +40,11 @@
 			<version>3.12.0</version> <!-- or the latest version -->
 		</dependency>
 
-
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-cache</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-data-mongodb</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-freemarker</artifactId>-->
-		<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -73,18 +53,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-mail</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-oauth2-client</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-		<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -93,54 +62,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-starter-webflux</artifactId>-->
-		<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>com.azure.spring</groupId>-->
-		<!--			<artifactId>spring-cloud-azure-starter</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>com.azure.spring</groupId>-->
-		<!--			<artifactId>spring-cloud-azure-starter-actuator</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>com.azure.spring</groupId>-->
-		<!--			<artifactId>spring-cloud-azure-starter-jdbc-mysql</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>com.azure.spring</groupId>-->
-		<!--			<artifactId>spring-cloud-azure-starter-jdbc-postgresql</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>com.azure.spring</groupId>-->
-		<!--			<artifactId>spring-cloud-azure-starter-storage</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.apache.kafka</groupId>-->
-		<!--			<artifactId>kafka-streams</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.cloud</groupId>-->
-		<!--			<artifactId>spring-cloud-config-server</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.cloud</groupId>-->
-		<!--			<artifactId>spring-cloud-starter-config</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.cloud</groupId>-->
-		<!--			<artifactId>spring-cloud-starter-gateway-mvc</artifactId>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.kafka</groupId>-->
-		<!--			<artifactId>spring-kafka</artifactId>-->
-		<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -148,12 +74,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.boot</groupId>-->
-		<!--			<artifactId>spring-boot-docker-compose</artifactId>-->
-		<!--			<scope>runtime</scope>-->
-		<!--			<optional>true</optional>-->
-		<!--		</dependency>-->
+
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
@@ -164,11 +85,6 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.postgresql</groupId>-->
-		<!--			<artifactId>postgresql</artifactId>-->
-		<!--			<scope>runtime</scope>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -179,21 +95,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>com.unboundid</groupId>-->
-		<!--			<artifactId>unboundid-ldapsdk</artifactId>-->
-		<!--			<scope>test</scope>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>io.projectreactor</groupId>-->
-		<!--			<artifactId>reactor-test</artifactId>-->
-		<!--			<scope>test</scope>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>org.springframework.kafka</groupId>-->
-		<!--			<artifactId>spring-kafka-test</artifactId>-->
-		<!--			<scope>test</scope>-->
-		<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
@@ -212,25 +114,18 @@
 			<artifactId>jersey-server</artifactId>
 			<version>2.35</version> <!-- Use the latest version available -->
 		</dependency>
-	</dependencies>
-	<!--	<dependencyManagement>-->
-	<!--		<dependencies>-->
-	<!--			<dependency>-->
-	<!--				<groupId>org.springframework.cloud</groupId>-->
-	<!--				<artifactId>spring-cloud-dependencies</artifactId>-->
-	<!--				<version>${spring-cloud.version}</version>-->
-	<!--				<type>pom</type>-->
-	<!--				<scope>import</scope>-->
-	<!--			</dependency>-->
-	<!--			<dependency>-->
-	<!--				<groupId>com.azure.spring</groupId>-->
-	<!--				<artifactId>spring-cloud-azure-dependencies</artifactId>-->
-	<!--				<version>${spring-cloud-azure.version}</version>-->
-	<!--				<type>pom</type>-->
-	<!--				<scope>import</scope>-->
-	<!--			</dependency>-->
-	<!--		</dependencies>-->
-	<!--	</dependencyManagement>-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
